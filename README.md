@@ -4,7 +4,7 @@
 
 [2. Monty Hall Problem](#anchor2)
 ___
-###  <a id="anchor1">Simulation #1:</a>
+###  <a id="anchor1">Guess Rank / Suit Problem:</a>
 `1. Guess Rank-or-Suit.ipynb`
 
 * take a DECK (52 cards)
@@ -14,7 +14,7 @@ ___
 ![rank_or_suit](pictures/guess_rank_or_suit.png)
 
 ___
-### <a id="anchor1">Simulation #2:</a>
+### <a id="anchor2">Monty Hall Problem</a>
 `2. Monty Hall Problem.ipynb`
 
 * 3 doors
