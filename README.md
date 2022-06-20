@@ -28,6 +28,10 @@ ___
 
 ___
 ### <a id="anchor2">BlackJack Strategy</a>
+`3. BlackJack Basic Strategy.ipynb`
+
+* a. Based on ***thresholds***
+![blackjack_thresholds](pictures/blackjack_thresholds.png)
 
 
 
