@@ -2,16 +2,19 @@ from card import Card
 from player import Player
 from dealer import Dealer
 from random import shuffle
+
 from action import ActionSpace
+from champion import ChampionSpace
 
 
 class Table:
+    GOAL = 21
     POSSIBLE_SUITS_U = ['♠', '♥', '♦', '♣']
     POSSIBLE_RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
 
-    def __init__(self):
-        self.main_player = Player()
-        self.main_dealer = Dealer()
+    def __init__(self, player_threshold, dealer_threshold):
+        self.main_player = Player(player_threshold)
+        self.main_dealer = Dealer(dealer_threshold)
 
         self.deck = []
         self.create_deck()
@@ -43,9 +46,33 @@ class Table:
             self._give_card(self.main_player)
             self._give_card(self.main_dealer)
 
-    def who_win(self):
-        # TODO implement who_wins
-        pass
+    def who_won(self):
+        player_score = self.main_player.best_score
+        dealer_score = self.main_dealer.best_score
+
+        if player_score < self.GOAL:
+            if dealer_score < self.GOAL:
+                return ChampionSpace.DRAW if player_score == dealer_score else ChampionSpace.PLAYER if player_score > dealer_score else ChampionSpace.DEALER
+            elif dealer_score == self.GOAL:
+                return ChampionSpace.DEALER
+            elif dealer_score > self.GOAL:
+                return ChampionSpace.PLAYER
+
+        elif player_score == self.GOAL:
+            if dealer_score < self.GOAL:
+                return ChampionSpace.PLAYER
+            elif dealer_score == self.GOAL:
+                return ChampionSpace.DRAW
+            elif dealer_score > self.GOAL:
+                return ChampionSpace.PLAYER
+
+        elif player_score > self.GOAL:
+            if dealer_score < self.GOAL:
+                return ChampionSpace.DEALER
+            elif dealer_score == self.GOAL:
+                return ChampionSpace.DEALER
+            elif dealer_score > self.GOAL:
+                return ChampionSpace.DRAW if player_score == dealer_score else ChampionSpace.PLAYER if player_score < dealer_score else ChampionSpace.DEALER
 
     def play(self):
         # PLAYER TAKES ACTIONS
@@ -69,8 +96,10 @@ def main():
     t = Table()
     t.play()
 
-    t.main_player.show()
-    t.main_dealer.show()
+    print("PLAYER", t.main_player.best_score)
+    print("DEALER", t.main_dealer.best_score)
+
+    print(t.who_won())
 
 
 if __name__ == "__main__":
