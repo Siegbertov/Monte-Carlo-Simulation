@@ -1,5 +1,5 @@
-from card import Card
-from action import ActionSpace
+from .card import Card
+from .action import ActionSpace
 
 
 class Person:
@@ -7,6 +7,12 @@ class Person:
 
     def __init__(self, threshold=17):
         self.threshold = threshold
+        self.hand = []
+        self.score_space = None
+        self.best_score = None
+        self.is_stand = False
+
+    def reset(self):
         self.hand = []
         self.score_space = None
         self.best_score = None

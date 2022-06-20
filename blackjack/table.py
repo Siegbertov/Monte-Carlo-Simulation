@@ -1,10 +1,10 @@
-from card import Card
-from player import Player
-from dealer import Dealer
+from .card import Card
+from .player import Player
+from .dealer import Dealer
 from random import shuffle
 
-from action import ActionSpace
-from champion import ChampionSpace
+from .action import ActionSpace
+from .champion import ChampionSpace
 
 
 class Table:
@@ -13,25 +13,28 @@ class Table:
     POSSIBLE_RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
 
     def __init__(self, player_threshold, dealer_threshold):
+        self.player_threshold = player_threshold
+        self.dealer_threshold = dealer_threshold
+
         self.main_player = Player(player_threshold)
         self.main_dealer = Dealer(dealer_threshold)
 
         self.deck = []
-        self.create_deck()
+        self._create_deck()
         self.start()
 
-    def create_deck(self):
+    def _create_deck(self):
         for s in self.POSSIBLE_SUITS_U:
             for r in self.POSSIBLE_RANKS:
                 self.deck.append(Card(s, r))
         self._shuffle_deck()
 
     def reset(self):
-        self.main_player = Player()
-        self.main_dealer = Dealer()
+        self.main_player.reset()
+        self.main_dealer.reset()
 
         self.deck = []
-        self.create_deck()
+        self._create_deck()
         self.start()
 
     def _shuffle_deck(self):
@@ -90,17 +93,3 @@ class Table:
                 self._give_card(self.main_dealer)
             elif decision == ActionSpace.STAND:
                 self.main_dealer.is_stand = True
-
-
-def main():
-    t = Table()
-    t.play()
-
-    print("PLAYER", t.main_player.best_score)
-    print("DEALER", t.main_dealer.best_score)
-
-    print(t.who_won())
-
-
-if __name__ == "__main__":
-    main()
