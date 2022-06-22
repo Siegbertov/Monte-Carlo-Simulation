@@ -1,72 +1,63 @@
 from .card import Card
 from .action import ActionSpace
+from .hand import Hand
+from .deck import Deck
 
 
 class Person:
     GOAL = 21
 
-    def __init__(self, threshold=17):
+    def __init__(self, threshold=17, strategy=None):
         self.threshold = threshold
-        self.hand = []
-        self.score_space = None
-        self.best_score = None
+        if strategy is None:
+            self.strategy = "threshold"
+        else:
+            self.strategy = strategy
+
+        self.current_focus = 0
+        self.hands = [Hand()]
         self.is_stand = False
 
     def reset(self):
-        self.hand = []
-        self.score_space = None
-        self.best_score = None
+        self.hands = [Hand()]
         self.is_stand = False
 
-    def take(self, some_card: Card):
-        self.hand.append(some_card)
-
-    def count_score_space(self):
-        scores = [c.get_score() for c in self.hand]
-        first_score = scores[0]
-        for next_score in scores[1:]:
-            if type(first_score) == int:
-                if type(next_score) == int:
-                    first_score += next_score
-
-                elif type(next_score) == tuple:
-                    new_s = []
-                    for s in next_score:
-                        new_s.append(first_score+s)
-                    first_score = tuple(set(new_s))
-
-            elif type(first_score) == tuple:
-                if type(next_score) == int:
-                    new_s = []
-                    for s in first_score:
-                        new_s.append(next_score + s)
-                    first_score = tuple(set(new_s))
-
-                elif type(next_score) == tuple:
-                    new_s = []
-                    for f_s in first_score:
-                        for n_s in next_score:
-                            new_s.append(f_s + n_s)
-                    first_score = tuple(set(new_s))
-        self.score_space = first_score
-        self._count_best_score()
-
-    def _count_best_score(self):
-        if type(self.score_space) == int:
-            self.best_score = self.score_space
-        else:
-            self.best_score = self.score_space[0]
-            for next_score in self.score_space[1:]:
-                if next_score <= self.GOAL:
-                    self.best_score = next_score
-                else:
-                    break
+    def take(self, card: Card, num_of_hand=0):
+        for h_index, hand in enumerate(self.hands):
+            if h_index == num_of_hand:
+                hand.put(card)
 
     def show(self):
-        print(self.hand, self.best_score)
+        for hand in self.hands:
+            hand.show()
 
-    def make_decision(self, *args, **kwargs):
-        if self.best_score >= self.threshold:
-            return ActionSpace.STAND
-        else:
-            return ActionSpace.HIT
+    def __len__(self):
+        return self.hands.__len__()
+
+    def __getitem__(self, item):
+        return self.hands[item]
+
+    def _is_all_no_split(self):
+        res = True
+        for hand in self.hands:
+            if ActionSpace.SPLIT in hand.possible_actions:
+                res = False
+                break
+        return res
+
+    def step(self, action: ActionSpace, deck: Deck):
+        pass
+
+    def make_decision(self) -> list:
+        """decision based on threshold"""
+        dec = []
+        for hand in self.hands:
+            if hand.best_score >= self.threshold:
+                dec.append(ActionSpace.STAND)
+            else:
+                dec.append(ActionSpace.HIT)
+        return dec
+
+    def play(self, deck: Deck):
+        pass
+
