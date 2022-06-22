@@ -2,7 +2,7 @@ from blackjack import Game
 
 
 def main():
-    new_game = Game()
+    new_game = Game(player_strategy='threshold')
     for _ in range(10_000):
         new_game.play()
         new_game.reset()
