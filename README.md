@@ -40,8 +40,4 @@ ___
 
 **dealer always plays with threshold strategy**
 
-![blackjack_strategy](pictures/blackjack_strategy.png)
-
-
-
-
+![blackjack_strategy](pictures/startegy_for_blackjack_comparison.png)

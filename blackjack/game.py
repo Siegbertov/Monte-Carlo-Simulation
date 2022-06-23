@@ -25,6 +25,9 @@ class Game:
 
         self._check()
 
+    def show_table(self):
+        self.table.show()
+
     def _check(self):
         results = self.table.who_win()
         for result in results:
